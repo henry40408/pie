@@ -1,0 +1,10 @@
+# Source of truth for runtimes inside the VM. Copied to ~/.config/mise/config.toml by `make up`.
+# Update pi with `make update V=<version>`.
+[settings]
+minimum_release_age = "7d"
+
+[tools]
+node = "22.23.3"
+"npm:@earendil-works/pi-coding-agent" = "1.1.0"
+fd = "10.5.0"
+ripgrep = "15.2.0"

@@ -1,0 +1,51 @@
+# Standalone template (no host mounts) for the pi sandbox VM.
+minimumLimaVersion: 2.0.0
+
+base:
+- template:_images/debian-13
+
+vmType: vz
+arch: aarch64
+cpus: 4
+memory: 8GiB
+disk: 20GiB
+
+# No host mounts, no forwarded agent, no containerd, no proxy env copied from the host.
+mounts: []
+propagateProxyEnv: false
+# Never publish guest listeners on the host's localhost.
+portForwards:
+- guestIP: "0.0.0.0"
+  guestIPMustBeZero: false
+  guestPortRange: [1, 65535]
+  proto: any
+  ignore: true
+ssh:
+  forwardAgent: false
+  loadDotSSHPubKeys: false
+containerd:
+  system: false
+  user: false
+
+# Named volumes: survive `limactl delete`. Created by `make disks`.
+additionalDisks:
+- name: pi-config
+  format: true
+  fsType: ext4
+- name: workspace
+  format: true
+  fsType: ext4
+
+provision:
+- mode: system
+  script: |
+    #!/bin/bash
+    set -eux -o pipefail
+    export DEBIAN_FRONTEND=noninteractive
+    dpkg -s git curl ca-certificates xz-utils unzip build-essential >/dev/null 2>&1 || {
+      apt-get update
+      apt-get install -y --no-install-recommends git curl ca-certificates xz-utils unzip build-essential
+    }
+    for d in pi-config workspace; do
+      chown "{{.User}}:{{.User}}" "/mnt/lima-$d"
+    done
