@@ -8,7 +8,7 @@ SHELL_IN  := limactl shell $(INSTANCE) --
 PI_NPM    := @earendil-works/pi-coding-agent
 
 .DEFAULT_GOAL := help
-.PHONY: help disks up down shell recreate update status destroy purge-data
+.PHONY: help disks up down shell pi recreate update status destroy purge-data
 
 help: ## Show targets
 	@grep -hE "^[a-z-]+:.*## " Makefile | awk -F':.*## ' '{printf "%-12s %s\n", $$1, $$2}'
@@ -34,6 +34,9 @@ down: ## Stop the VM
 
 shell: ## Open a shell in the workspace volume
 	limactl shell --workdir $(WORKDIR) $(INSTANCE)
+
+pi: ## Run pi in the workspace volume (ARGS="..." passes arguments)
+	limactl shell --workdir $(WORKDIR) $(INSTANCE) -- sh -c '. "$$HOME/.config/pie/env" && exec pi "$$@"' sh $(ARGS)
 
 recreate: ## Delete and rebuild the VM; volumes are kept
 	-limactl stop $(INSTANCE)
