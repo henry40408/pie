@@ -14,7 +14,7 @@ Debian 13 Lima VM for [pi](https://pi.dev), isolated from the host.
 
 ```
 make up                  # create/start the VM, install mise, node, pi (idempotent)
-make shell               # shell in /mnt/lima-workspace
+make shell               # shell in /mnt/lima-workspace (under Ghostty, installs its terminfo in the VM once)
 make pi                  # run pi in /mnt/lima-workspace (ARGS="-c" passes arguments; the host shell parses ARGS, so quote carefully)
 make update V=1.2.0      # pin another pi version (refused if published < 7 days ago); review and commit vm/mise.toml
 make recreate            # rebuild the VM, keep volumes

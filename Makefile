@@ -33,6 +33,10 @@ down: ## Stop the VM
 	limactl stop $(INSTANCE)
 
 shell: ## Open a shell in the workspace volume
+	@# Ghostty sets TERM=xterm-ghostty, which Debian lacks; copy its terminfo into the guest once.
+	@if [ "$$TERM" = xterm-ghostty ] && ! $(SHELL_IN) infocmp xterm-ghostty >/dev/null 2>&1; then \
+	  infocmp -x xterm-ghostty | $(SHELL_IN) tic -x - 2>/dev/null; \
+	fi
 	limactl shell --workdir $(WORKDIR) $(INSTANCE)
 
 pi: ## Run pi in the workspace volume (ARGS="..." passes arguments)
