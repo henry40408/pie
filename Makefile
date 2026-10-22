@@ -28,6 +28,7 @@ up: disks ## Create/start the VM, install mise, node and pi
 	$(SHELL_IN) env MISE_VERSION=$(MISE_VERSION) MISE_SHA256_ARM64=$(MISE_SHA256_ARM64) sh -s < scripts/bootstrap.sh
 	$(SHELL_IN) sh -c 'cat > "$$HOME/.config/mise/config.toml"' < vm/mise.toml
 	$(SHELL_IN) sh -s < scripts/install-tools.sh
+	$(SHELL_IN) sh -s < scripts/enable-codemode.sh
 
 down: ## Stop the VM
 	limactl stop $(INSTANCE)
