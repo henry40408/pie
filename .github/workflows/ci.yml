@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: ShellCheck
+        run: shellcheck scripts/*.sh
+
+      - name: actionlint
+        run: actionlint
+
+      - name: Makefile parses
+        run: make -n help
+
+      - name: TOML and YAML parse
+        run: |
+          python3 -c 'import sys, tomllib; tomllib.load(open(sys.argv[1], "rb"))' vm/mise.toml
+          yq . lima/pie.yaml > /dev/null
+
+      - name: Verify mise digest matches pin
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          . ./versions.env
+          asset="mise-v${MISE_VERSION}-linux-arm64.tar.gz"
+          digest=$(gh api "repos/jdx/mise/releases/tags/v${MISE_VERSION}" \
+            --jq ".assets[] | select(.name == \"${asset}\") | .digest")
+          [ "$digest" = "sha256:${MISE_SHA256_ARM64}" ] || { echo "digest mismatch: '$digest'" >&2; exit 1; }

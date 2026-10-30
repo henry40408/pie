@@ -23,6 +23,7 @@ export NPM_CONFIG_IGNORE_SCRIPTS=true
 export MISE_YES=1
 ENVEOF
 
+# shellcheck disable=SC2016  # literal $HOME is written to .profile on purpose
 line='. "$HOME/.config/pie/env"'
 for rc in "$HOME/.profile" "$HOME/.bashrc"; do
   touch "$rc"
