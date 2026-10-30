@@ -2,6 +2,7 @@
 # Runs inside the VM. Usage: check-age.sh <npm-package> <version> [min-days]
 # Fails if the version was published less than min-days ago (default 7).
 set -eu
+# shellcheck source=/dev/null  # created in the VM by bootstrap.sh
 . "$HOME/.config/pie/env"
 pkg=$1 ver=$2 min=${3:-7}
 published=$(npm view "$pkg" "time[$ver]")

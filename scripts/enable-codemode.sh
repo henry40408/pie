@@ -1,6 +1,7 @@
 #!/bin/sh
 # Runs inside the VM. Idempotent. Adds codemode to pi's default tools without touching other settings.
 set -eu
+# shellcheck source=/dev/null  # created in the VM by bootstrap.sh
 . "$HOME/.config/pie/env"
 
 # node is already pinned by mise; Debian ships no jq.

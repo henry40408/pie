@@ -1,5 +1,6 @@
 # pie
 
+[![CI](https://github.com/henry40408/pie/actions/workflows/ci.yml/badge.svg)](https://github.com/henry40408/pie/actions/workflows/ci.yml)
 [![License](https://img.shields.io/github/license/henry40408/pie)](LICENSE.txt)
 [![Node](https://img.shields.io/badge/dynamic/toml?url=https://raw.githubusercontent.com/henry40408/pie/main/vm/mise.toml&query=$.tools.node&label=node&logo=nodedotjs)](vm/mise.toml)
 [![Casual Maintenance Intended](https://casuallymaintained.tech/badge.svg)](https://casuallymaintained.tech/)
