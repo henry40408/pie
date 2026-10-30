@@ -19,8 +19,18 @@ jobs:
       - name: ShellCheck
         run: shellcheck scripts/*.sh
 
+      # Not preinstalled on ubuntu-latest, so fetch a pinned release and check its checksum.
       - name: actionlint
-        run: actionlint
+        env:
+          ACTIONLINT_VERSION: 1.7.12
+          ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+        run: |
+          tmp=$(mktemp -d)
+          curl -fsSL -o "$tmp/actionlint.tgz" \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          echo "${ACTIONLINT_SHA256}  $tmp/actionlint.tgz" | sha256sum -c -
+          tar -xzf "$tmp/actionlint.tgz" -C "$tmp" actionlint
+          "$tmp/actionlint"
 
       - name: Makefile parses
         run: make -n help
